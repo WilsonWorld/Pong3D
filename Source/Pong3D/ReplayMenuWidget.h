@@ -18,6 +18,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* ReplayButton;
 
+	UFUNCTION()
+		void EnableMouseEvents(bool state);
+
 protected:
 	void NativeConstruct() override;
 
@@ -25,5 +28,8 @@ protected:
 
 	UFUNCTION()
 		void OnReplayButtonClicked();
+
+	UPROPERTY()
+		class APongController* PongControllerRef;
 	
 };

@@ -30,17 +30,10 @@ void AAIPongPaddle::Tick(float DeltaTime)
 	if (paddleScore < scoreLimit)
 		return;
 	else{
-		// Player Loses
-		// Display Defeat Text
-		// Open EndGameMenu Widget with options to restart or quit
-		if (ReplayWidget)
-		{
+		if (ReplayWidget) {
 			UReplayMenuWidget* ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
 			ReplayMenuWidget->AddToViewport(0);
 		}
-
-		//m_PongBall->Destroy();
-		m_PongBall->SetActorLocation(FVector(0.0f, 0.0f, 1050.0f));
 	}
 }
 
@@ -67,8 +60,7 @@ void AAIPongPaddle::MovePaddle(float DeltaTime)
 	FVector NewPosition = FMath::VInterpConstantTo(GetActorLocation(), TargetPosition, DeltaTime, Difficulty);
 	SetActorLocation(NewPosition);
 
-	// BAD CODE - Sets the paddle position directly to where the target position is (causing teleporting after coming awake)
-	//SetActorLocation(TargetPosition);
+	CheckMoveBoundaries();
 }
 
 // Manage Paddle's sleep state based off the duration of time that passes and how long should be spent in each state

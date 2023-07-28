@@ -31,10 +31,6 @@ void APlayerPongPaddle::Tick(float DeltaTime)
 	FVector NewLocationZ = GetActorLocation();
 	if (CurrentMovementVert != 0)
 		NewLocationZ = GetActorLocation() + (GetActorUpVector() * CurrentMovementVert * paddleSpeed);
-	if (NewLocationZ.Z <= 230.0f)
-		NewLocationZ.Z = 230.0f;
-	if (NewLocationZ.Z >= 2470.0f)
-		NewLocationZ.Z = 2470.0f;
 
 	SetActorLocation(NewLocationZ);
 
@@ -42,29 +38,18 @@ void APlayerPongPaddle::Tick(float DeltaTime)
 	FVector NewLocationY = GetActorLocation();
 	if (CurrentMovementHoriz != 0)
 		NewLocationY = GetActorLocation() + (GetActorRightVector() * CurrentMovementHoriz * paddleSpeed);
-	if (NewLocationY.Y >= 2370.0f)
-		NewLocationY.Y = 2370.0f;
-	if (NewLocationY.Y <= -2370.0f)
-		NewLocationY.Y = -2370.0f;
 
 	SetActorLocation(NewLocationY);
+
+	CheckMoveBoundaries();
 
 	if (paddleScore < scoreLimit)
 		return;
 	else {
-		// Player Loses
-		// Display Defeat Text
-		// Open EndGameMenu Widget with options to restart or quit
-		if (ReplayWidget)
-		{
+		if (ReplayWidget) {
 			UReplayMenuWidget* ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
 			ReplayMenuWidget->AddToViewport(0);
 		}
-
-		AActor* ballActor = UGameplayStatics::GetActorOfClass(GetWorld(), APongBall::StaticClass());
-		APongBall* pongBall = Cast<APongBall>(ballActor);
-		//pongBall->Destroy();
-		pongBall->SetActorLocation(FVector(0.0f, 0.0f, 1050.0f));
 	}
 }
 

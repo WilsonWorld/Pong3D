@@ -39,3 +39,25 @@ void APongPaddle::HorizontalMove(float AxisValue)
 {
 	CurrentMovementHoriz = AxisValue;
 }
+
+// Stop the paddle from moving into/over game area boundaries
+void APongPaddle::CheckMoveBoundaries()
+{
+	// Move the Paddle along the Z-axis until they hit the boundaries
+	FVector NewLocationZ = GetActorLocation();
+	if (NewLocationZ.Z <= 600.0f)
+		NewLocationZ.Z = 600.0f;
+	if (NewLocationZ.Z >= 2100.0f)
+		NewLocationZ.Z = 2100.0f;
+
+	SetActorLocation(NewLocationZ);
+
+	// Move the Paddle along the Y-axis until they hit the boundaries
+	FVector NewLocationY = GetActorLocation();
+	if (NewLocationY.Y >= 1900.0f)
+		NewLocationY.Y = 1900.0f;
+	if (NewLocationY.Y <= -1900.0f)
+		NewLocationY.Y = -1900.0f;
+
+	SetActorLocation(NewLocationY);
+}

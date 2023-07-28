@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MovementHoriz")
 		void HorizontalMove(float AxisValue);
 
+	UFUNCTION()
+		void CheckMoveBoundaries();
+
 	float CurrentMovementVert;
 	float CurrentMovementHoriz;
 
