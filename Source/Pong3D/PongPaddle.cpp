@@ -1,12 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. May 14th, 2023.
+// Paddle class is responsible for managing shared properties between the player and ai paddles.
 
 #include "PongPaddle.h"
+#include "PongGameState.h"
+#include "ReplayMenuWidget.h"
 
-// Sets default values
+
 APongPaddle::APongPaddle() 
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	// Paddle Root Object, both collision and visual mesh
@@ -25,7 +26,25 @@ APongPaddle::APongPaddle()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+}
 
+void APongPaddle::BeginPlay()
+{
+	Super::BeginPlay();
+	PongGameState = Cast<APongGameState>(GetWorld()->GetGameState());
+}
+
+void APongPaddle::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (paddleScore < scoreLimit)
+		return;
+	else {
+		if (ReplayWidget) {
+			UReplayMenuWidget* ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
+			ReplayMenuWidget->AddToViewport(0);
+		}
+	}
 }
 
 // Move the paddle up and down

@@ -1,20 +1,16 @@
 // Goal Trigger class for Pong 3D, created by Aaron Wilson, Wilson World Games. July 16th, 2023.
 // Goal Trigger class is responsible for reseting the Pong Ball and incrementing opposing player's score.
 
-
 #include "GoalTrigger.h"
-#include "PongBall.h"
-#include "AIPongPaddle.h"
-#include "PlayerPongPaddle.h"
+#include "PongGameState.h"
 #include "Components/BoxComponent.h"
-#include "Kismet/GameplayStatics.h"
 
-// Sets default values
+
 AGoalTrigger::AGoalTrigger()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Create and set up the box trigger to detect overlaps
 	GoalBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Box"));
 	SetRootComponent(GoalBox);
 	GoalBox->SetSimulatePhysics(true);
@@ -26,49 +22,28 @@ AGoalTrigger::AGoalTrigger()
 
 }
 
-// Called when the game starts or when spawned
 void AGoalTrigger::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	PongGameState = Cast<APongGameState>(GetWorld()->GetGameState());
 }
 
-// Called every frame
-void AGoalTrigger::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
+//Check for objects overlaping this trigger, only ball can hit this. Check if it is set as the player or ai and update the score accordingly
 void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
-	{
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
 		if (bIsPlayerGoal == true)
-		{
-			AActor* pActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerPongPaddle::StaticClass());
-			APlayerPongPaddle* playerPaddle = Cast<APlayerPongPaddle>(pActor);
-			playerPaddle->paddleScore++;
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue,(TEXT("Player Score: " + FString::FromInt(playerPaddle->paddleScore))));
-		}
+			PongGameState->PlayerPaddleRef->paddleScore++;
 		else
-		{
-			AActor* pActor = UGameplayStatics::GetActorOfClass(GetWorld(), AAIPongPaddle::StaticClass());
-			AAIPongPaddle* aiPaddle = Cast<AAIPongPaddle>(pActor);
-			aiPaddle->paddleScore++;
-
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, (TEXT("AI Score: " + FString::FromInt(aiPaddle->paddleScore))));
-		}
+			PongGameState->AIPaddleRef->paddleScore++;
 
 		APongBall* pBall = Cast<APongBall>(OtherActor);
 		if (pBall != NULL)
-		{
 			ResetBall(pBall);
-		}
 	}
 }
 
+// Resets the ball 
 void AGoalTrigger::ResetBall(APongBall* ball)
 {
 	ball->StartFaceOff();

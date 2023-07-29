@@ -7,13 +7,13 @@
 #include "GameFramework/Actor.h"
 #include "GoalTrigger.generated.h"
 
+
 UCLASS()
 class PONG3D_API AGoalTrigger : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	AGoalTrigger();
 
 	UFUNCTION()
@@ -26,14 +26,11 @@ public:
 		bool bIsPlayerGoal;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class APongGameState* PongGameState;
 };

@@ -1,19 +1,16 @@
 // AI Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. June 16th, 2023.
 // AI Paddle class is responsible for tracking the game's Pong Ball and moving a Paddle to block the ball from entering AI Goal Area/Trigger.
 
-
 #include "AIPongPaddle.h"
-#include "Kismet/GameplayStatics.h"
+#include "PongGameState.h"
 #include "Math/UnrealMathUtility.h"
-#include "PongBall.h"
-#include "ReplayMenuWidget.h"
 
 
 void AAIPongPaddle::BeginPlay()
 {
 	Super::BeginPlay();
-	GetPongBall();
 	TargetPosition = GetActorLocation();
+	GetPongBall();
 }
 
 void AAIPongPaddle::Tick(float DeltaTime)
@@ -27,27 +24,18 @@ void AAIPongPaddle::Tick(float DeltaTime)
 	SetPaddleTargetPosition();
 	MovePaddle(DeltaTime);
 
-	if (paddleScore < scoreLimit)
-		return;
-	else{
-		if (ReplayWidget) {
-			UReplayMenuWidget* ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
-			ReplayMenuWidget->AddToViewport(0);
-		}
-	}
 }
 
 // Grab the Pong Ball Actor and store it in the Pong Ball member variable
-void AAIPongPaddle::GetPongBall()
+APongBall* AAIPongPaddle::GetPongBall()
 {
-	AActor* ballActor = UGameplayStatics::GetActorOfClass(GetWorld(), APongBall::StaticClass());
-	m_PongBall = Cast<APongBall>(ballActor);
+	return PongGameState->PongBallRef;
 }
 
 // Get the Paddle's current location and update it with the Pong Ball's Y & Z position, storing it inside the FVector member varible
 void AAIPongPaddle::SetPaddleTargetPosition()
 {
-	FVector ballPos = m_PongBall->GetActorLocation();
+	FVector ballPos = GetPongBall()->GetActorLocation();
 	FVector TargetLocation = GetActorLocation();
 	TargetLocation = FVector(TargetLocation.X, ballPos.Y, ballPos.Z);
 	TargetPosition = TargetLocation;
@@ -56,10 +44,8 @@ void AAIPongPaddle::SetPaddleTargetPosition()
 // Move the Paddle actor to the Target Position
 void AAIPongPaddle::MovePaddle(float DeltaTime)
 {
-	// IN PROGRESS - Move the Paddle towards the target position rather than setting it's position to the target position
 	FVector NewPosition = FMath::VInterpConstantTo(GetActorLocation(), TargetPosition, DeltaTime, Difficulty);
 	SetActorLocation(NewPosition);
-
 	CheckMoveBoundaries();
 }
 

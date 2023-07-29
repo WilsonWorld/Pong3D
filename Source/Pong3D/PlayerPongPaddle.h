@@ -1,4 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Player Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. May 14th, 2023.
+// Player Paddle class is responsible for moving the paddle via the player controller. Ensures movement is within game boundaries and score is tracked.
 
 #pragma once
 
@@ -6,9 +7,7 @@
 #include "PongPaddle.h"
 #include "PlayerPongPaddle.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PONG3D_API APlayerPongPaddle : public APongPaddle
 {
@@ -25,6 +24,9 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+protected:
+	UFUNCTION()
+		void UpdateLocation(float vertMove, float horizMove);
 };

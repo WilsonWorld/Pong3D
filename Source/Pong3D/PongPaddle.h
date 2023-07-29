@@ -1,11 +1,12 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. May 14th, 2023.
+// Paddle class is responsible for managing shared properties between the player and ai paddles.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "Blueprint/UserWidget.h"
 #include "PongPaddle.generated.h"
+
 
 UCLASS()
 class PONG3D_API APongPaddle : public APawn
@@ -13,8 +14,16 @@ class PONG3D_API APongPaddle : public APawn
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this pawn's properties
 	APongPaddle();
+
+	UFUNCTION(BlueprintCallable, Category = "MovementVert")
+		void VerticalMove(float AxisValue);
+
+	UFUNCTION(BlueprintCallable, Category = "MovementHoriz")
+		void HorizontalMove(float AxisValue);
+
+	UFUNCTION()
+		void CheckMoveBoundaries();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UStaticMeshComponent* paddleMesh;
@@ -31,14 +40,13 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		int scoreLimit = 0;
 
-	UFUNCTION(BlueprintCallable, Category = "MovementVert")
-		void VerticalMove(float AxisValue);
+protected:
+	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable, Category = "MovementHoriz")
-		void HorizontalMove(float AxisValue);
+	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
-		void CheckMoveBoundaries();
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class APongGameState* PongGameState;
 
 	float CurrentMovementVert;
 	float CurrentMovementHoriz;

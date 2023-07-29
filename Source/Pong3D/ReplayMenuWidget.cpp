@@ -1,15 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. July 20th, 2023.
 
 #include "ReplayMenuWidget.h"
+#include "PongController.h"
 #include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
-#include "PongController.h"
+
 
 void UReplayMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-
 	ReplayButton->OnClicked.AddUniqueDynamic(this, &UReplayMenuWidget::OnReplayButtonClicked);
 
 	APlayerController* playController = GetWorld()->GetFirstPlayerController();

@@ -19,7 +19,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "MovementAI")
-		void GetPongBall();
+		class APongBall* GetPongBall();
 
 	UFUNCTION(BlueprintCallable, Category = "MovementAI")
 		void SetPaddleTargetPosition();
@@ -40,9 +40,6 @@ public:
 		float Difficulty = 10.0f;
 
 private:
-	UPROPERTY()
-		class APongBall* m_PongBall;
-	
 	FVector TargetPosition;
 	float AwakeTime = 0.0f;
 	float SleepTime = 0.0f;

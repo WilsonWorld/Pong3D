@@ -1,13 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Player Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. May 14th, 2023.
+// Player Paddle class is responsible for moving the paddle via the player controller. Ensures movement is within game boundaries and score is tracked.
 
 #include "PlayerPongPaddle.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Blueprint/UserWidget.h"
-#include "PongBall.h"
-#include "ReplayMenuWidget.h"
+
 
 APlayerPongPaddle::APlayerPongPaddle()
 {
@@ -26,38 +23,30 @@ APlayerPongPaddle::APlayerPongPaddle()
 void APlayerPongPaddle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	// Move the Paddle along the Z-axis until they hit the boundaries
-	FVector NewLocationZ = GetActorLocation();
-	if (CurrentMovementVert != 0)
-		NewLocationZ = GetActorLocation() + (GetActorUpVector() * CurrentMovementVert * paddleSpeed);
-
-	SetActorLocation(NewLocationZ);
-
-	// Move the Paddle along the Y-axis until they hit the boundaries
-	FVector NewLocationY = GetActorLocation();
-	if (CurrentMovementHoriz != 0)
-		NewLocationY = GetActorLocation() + (GetActorRightVector() * CurrentMovementHoriz * paddleSpeed);
-
-	SetActorLocation(NewLocationY);
-
+	UpdateLocation(CurrentMovementVert, CurrentMovementHoriz);
 	CheckMoveBoundaries();
-
-	if (paddleScore < scoreLimit)
-		return;
-	else {
-		if (ReplayWidget) {
-			UReplayMenuWidget* ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
-			ReplayMenuWidget->AddToViewport(0);
-		}
-	}
 }
 
-// Called to bind functionality to input
+// Called to bind movement functionality to input
 void APlayerPongPaddle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 	PlayerInputComponent->BindAxis("VertMove", this, &APongPaddle::VerticalMove);
 	PlayerInputComponent->BindAxis("HorizMove", this, &APongPaddle::HorizontalMove);
+}
+
+// Move the Paddle along the Z-axis / Y-axis until it hits the boundaries
+void APlayerPongPaddle::UpdateLocation(float vertMove, float horizMove)
+{
+	FVector NewLocationZ = GetActorLocation();
+	if (vertMove != 0)
+		NewLocationZ = GetActorLocation() + (GetActorUpVector() * vertMove * paddleSpeed);
+
+	SetActorLocation(NewLocationZ);
+
+	FVector NewLocationY = GetActorLocation();
+	if (horizMove != 0)
+		NewLocationY = GetActorLocation() + (GetActorRightVector() * horizMove * paddleSpeed);
+
+	SetActorLocation(NewLocationY);
 }
