@@ -48,6 +48,18 @@ protected:
 	UFUNCTION()
 		void LimitBallSpeed(FVector speed);
 
+	UFUNCTION()
+		void AddSpeed();
+
+	UFUNCTION()
+		void ChangeSize();
+
+	UFUNCTION()
+		void ChangeColor();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		UMaterialInterface* OriginalMat;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
 		class UAudioComponent* AudioComp;
 

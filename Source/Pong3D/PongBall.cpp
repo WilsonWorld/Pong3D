@@ -29,6 +29,8 @@ APongBall::APongBall()
 	AudioComp->bAutoActivate = false;
 	AudioComp->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	AudioComp->SetupAttachment(RootComponent);
+
+	OriginalMat = pBallMesh->GetMaterial(0);
 }
 
 void APongBall::BeginPlay()
@@ -52,10 +54,11 @@ void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 		if (!AudioComp->IsPlaying())
 			AudioComp->Play();
 
+		ChangeColor();
+
 		if (OtherActor->ActorHasTag("Paddle")) {
-			FVector velocity = pBallMesh->GetComponentVelocity();
-			velocity = FVector(velocity.X, velocity.Y, velocity.Z) * 0.25f;
-			pBallMesh->AddImpulse(velocity, NAME_None, true);
+			AddSpeed();
+			ChangeSize();
 		}
 	}
 }
@@ -101,4 +104,31 @@ void APongBall::LimitBallSpeed(FVector speed)
 		speed.Z = ballMaxSpeed;
 	}
 	pBallMesh->GetBodyInstance()->SetLinearVelocity(speed, false, true);
+}
+
+// Add a burst of speed
+void APongBall::AddSpeed()
+{
+	FVector velocity = pBallMesh->GetComponentVelocity();
+	velocity = FVector(velocity.X, velocity.Y, velocity.Z) * 0.25f;
+	pBallMesh->AddImpulse(velocity, NAME_None, true);
+}
+
+// Decrease the size of the ball
+void APongBall::ChangeSize()
+{
+	FVector newSize = pBallMesh->GetRelativeScale3D() * 0.9f;
+	pBallMesh->SetWorldScale3D(newSize);
+}
+
+// Change the color of the ball to random new one
+void APongBall::ChangeColor()
+{
+	UMaterialInstanceDynamic* newMat = UMaterialInstanceDynamic::Create(OriginalMat, this);
+	float randR = FMath::RandRange(0.0f, 1.0f);
+	float randG = FMath::RandRange(0.0f, 1.0f);
+	float randB = FMath::RandRange(0.0f, 1.0f);
+	FVector4 randColor = FVector4(randR, randG, randB, 1.0f);
+	newMat->SetVectorParameterValue("MatColor", randColor);
+	pBallMesh->SetMaterial(0, newMat);
 }
