@@ -18,11 +18,13 @@ APongPaddle::APongPaddle()
 	paddleMesh->SetCollisionProfileName("BlockAllDynamic");
 	paddleMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
+	// Prevent physics body from rotating or moving when hit by the Pong Ball
 	paddleMesh->GetBodyInstance()->bLockXRotation = true;
 	paddleMesh->GetBodyInstance()->bLockYRotation = true;
 	paddleMesh->GetBodyInstance()->bLockZRotation = true;
 	paddleMesh->GetBodyInstance()->bLockXTranslation = true;
 
+	// Don't rotate the paddle when the mouse/camera control is moved
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
@@ -40,10 +42,11 @@ void APongPaddle::Tick(float DeltaTime)
 	if (paddleScore < scoreLimit)
 		return;
 	else {
-		if (ReplayWidget) {
-			UReplayMenuWidget* ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
-			ReplayMenuWidget->AddToViewport(0);
-		}
+		if (bTimerActive)
+			return;
+
+		bTimerActive = true;
+		GetWorld()->GetTimerManager().SetTimer(OpenMenuTimerHandle, this, &APongPaddle::OpenReplayMenu, 2.0f, false);
 	}
 }
 
@@ -79,4 +82,17 @@ void APongPaddle::CheckMoveBoundaries()
 		NewLocationY.Y = -1900.0f;
 
 	SetActorLocation(NewLocationY);
+}
+
+void APongPaddle::OpenReplayMenu()
+{
+	if (ReplayWidget) {
+		rmWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
+		rmWidget->AddToViewport(0);
+
+		if (bIsPlayerPaddle)
+			rmWidget->DisplayVictoryText();
+		else
+			rmWidget->DisplayDefeatText();
+	}
 }

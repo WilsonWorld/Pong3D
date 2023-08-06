@@ -20,4 +20,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UFont* HUDFont;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UImage* HUDBackgroundImage;
 };

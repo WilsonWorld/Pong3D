@@ -16,8 +16,20 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* ReplayButton;
 
+	UPROPERTY()
+		class UTextBlock* VictoryText;
+
+	UPROPERTY()
+		class UTextBlock* DefeatText;
+
 	UFUNCTION()
 		void EnableMouseEvents(bool state);
+
+	UFUNCTION()
+		void DisplayVictoryText();
+
+	UFUNCTION()
+		void DisplayDefeatText();
 
 protected:
 	void NativeConstruct() override;

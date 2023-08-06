@@ -19,11 +19,6 @@ APongBall::APongBall()
 	pBallMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	pBallMesh->OnComponentHit.AddDynamic(this, &APongBall::OnHit);
 
-	// Lock the mesh from rotating
-	//pBallMesh->GetBodyInstance()->bLockXRotation = true;
-	//pBallMesh->GetBodyInstance()->bLockYRotation = true;
-	//pBallMesh->GetBodyInstance()->bLockZRotation = true;
-
 	// Create and setup the audio component of the ball
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Sound Emitter"));
 	AudioComp->bAutoActivate = false;
@@ -63,12 +58,23 @@ void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 	}
 }
 
-// Set the Pong Ball to the Center of the game area and add force randomly towards either player
+// Public method for resetting the Pong Ball back to the start after the timer elasped
+void APongBall::ResetBall()
+{
+	StopMovement();
+	SetAtStartLocation();
+	ResetSize();
+	pBallMesh->SetVisibility(false);
+	GetWorld()->GetTimerManager().SetTimer(ResetTimerHandle, this, &APongBall::StartFaceOff, 3.0f, false);
+}
+
+// Reset the Reset Timer Handle and move the Pong Ball to the start with a random starting velocity
 void APongBall::StartFaceOff()
 {
+	pBallMesh->SetVisibility(true);
+	GetWorld()->GetTimerManager().ClearTimer(ResetTimerHandle);
 	SetAtStartLocation();
-	FVector spawnDirection = GenerateRandDirection();
-	pBallMesh->AddImpulse(spawnDirection * pBallSpeed, NAME_None, true);
+	SetStartVelocity();
 	MoveTowardsPlayer();
 }
 
@@ -77,6 +83,13 @@ void APongBall::SetAtStartLocation()
 {
 	FVector startLocation = FVector(0.0f, 0.0f, 1350.0f);
 	SetActorLocation(startLocation);
+}
+
+// Set the starting velocity based on a random 3D direction and starting speed
+void APongBall::SetStartVelocity()
+{
+	FVector spawnDirection = GenerateRandDirection();
+	pBallMesh->AddImpulse(spawnDirection * pBallSpeed, NAME_None, true);
 }
 
 // Return a vector with a random direction within a -1 to 1 range
@@ -117,19 +130,33 @@ void APongBall::LimitBallSpeed(FVector speed)
 	pBallMesh->GetBodyInstance()->SetLinearVelocity(speed, false, true);
 }
 
-// Add a burst of speed
+// Forcibly stop all movement on the Pong Ball
+void APongBall::StopMovement()
+{
+	FVector zeroVel = FVector::ZeroVector;
+	pBallMesh->GetBodyInstance()->SetLinearVelocity(zeroVel, false, true);
+}
+
+// Add a 20% burst of speed
 void APongBall::AddSpeed()
 {
 	FVector velocity = pBallMesh->GetComponentVelocity();
-	velocity = FVector(velocity.X, velocity.Y, velocity.Z) * 0.25f;
+	velocity = FVector(velocity.X, velocity.Y, velocity.Z) * 0.20f;
 	pBallMesh->AddImpulse(velocity, NAME_None, true);
 }
 
-// Decrease the size of the ball
+// Decrease the size of the ball by 5%
 void APongBall::ChangeSize()
 {
-	FVector newSize = pBallMesh->GetRelativeScale3D() * 0.9f;
+	FVector newSize = pBallMesh->GetRelativeScale3D() * 0.95f;
 	pBallMesh->SetWorldScale3D(newSize);
+}
+
+// Reset Pong Ball to orginal 100% scale size
+void APongBall::ResetSize()
+{
+	FVector originalSize = FVector::One();
+	pBallMesh->SetWorldScale3D(originalSize);
 }
 
 // Change the color of the ball to random new one

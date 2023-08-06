@@ -3,6 +3,7 @@
 #include "ReplayMenuWidget.h"
 #include "PongController.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -39,4 +40,14 @@ void UReplayMenuWidget::EnableMouseEvents(bool state)
 		PongControllerRef->bEnableClickEvents = state;
 		PongControllerRef->bEnableMouseOverEvents = state;
 	}
+}
+
+void UReplayMenuWidget::DisplayVictoryText()
+{
+	VictoryText->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UReplayMenuWidget::DisplayDefeatText()
+{
+	DefeatText->SetVisibility(ESlateVisibility::Visible);
 }

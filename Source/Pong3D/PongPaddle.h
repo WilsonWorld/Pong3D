@@ -45,10 +45,23 @@ protected:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+		void OpenReplayMenu();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FTimerHandle OpenMenuTimerHandle;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class APongGameState* PongGameState;
 
+	UPROPERTY()
+		class UReplayMenuWidget* rmWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool bIsPlayerPaddle;
+
 	float CurrentMovementVert;
 	float CurrentMovementHoriz;
+	bool bTimerActive = false;
 
 };

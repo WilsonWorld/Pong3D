@@ -19,17 +19,17 @@ public:
 	UFUNCTION()
 		void StartFaceOff();
 
+	UFUNCTION()
+		void ResetBall();
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UStaticMeshComponent* pBallMesh;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float pBallSpeed = 1000.0f;
+		float pBallSpeed = 2000.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float pBallBounce = 3.0f;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float ballMaxSpeed = 8000.0f;
+		float ballMaxSpeed = 6000.0f;
 
 protected:
 	virtual void BeginPlay() override;
@@ -43,6 +43,9 @@ protected:
 		void SetAtStartLocation();
 
 	UFUNCTION()
+		void SetStartVelocity();
+
+	UFUNCTION()
 		FVector GenerateRandDirection();
 
 	UFUNCTION()
@@ -52,10 +55,16 @@ protected:
 		void LimitBallSpeed(FVector speed);
 
 	UFUNCTION()
+		void StopMovement();
+
+	UFUNCTION()
 		void AddSpeed();
 
 	UFUNCTION()
 		void ChangeSize();
+
+	UFUNCTION()
+		void ResetSize();
 
 	UFUNCTION()
 		void ChangeColor();
@@ -68,5 +77,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		class USoundBase* BounceSound;
+
+	UPROPERTY(BlueprintReadOnly)
+		FTimerHandle ResetTimerHandle;
 
 };

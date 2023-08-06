@@ -23,7 +23,6 @@ void AAIPongPaddle::Tick(float DeltaTime)
 
 	SetPaddleTargetPosition();
 	MovePaddle(DeltaTime);
-
 }
 
 // Grab the Pong Ball Actor and store it in the Pong Ball member variable

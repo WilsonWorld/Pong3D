@@ -39,13 +39,13 @@ void AGoalTrigger::BeginPlay()
 void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
+		if (GoalAudio)
+			GoalAudio->Play();
+
 		if (bIsPlayerGoal == true)
 			PongGameState->PlayerPaddleRef->paddleScore++;
 		else
 			PongGameState->AIPaddleRef->paddleScore++;
-
-		if (GoalAudio)
-			GoalAudio->Play();
 
 		APongBall* pBall = Cast<APongBall>(OtherActor);
 		if (pBall != NULL)
@@ -56,5 +56,5 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 // Resets the ball 
 void AGoalTrigger::ResetBall(APongBall* ball)
 {
-	ball->StartFaceOff();
+	ball->ResetBall();
 }

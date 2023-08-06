@@ -4,6 +4,7 @@
 #include "Pong3DHUD.h"
 #include "PongGameState.h"
 #include "Engine.h"
+#include "Components/Image.h"
 
 
 APong3DHUD::APong3DHUD()
@@ -14,7 +15,8 @@ void APong3DHUD::DrawHUD()
 {
 	Super::DrawHUD();
 	APongGameState* pGS = Cast<APongGameState>(GetWorld()->GetGameState());
-	FString HUDString = FString::Printf(TEXT("[Player Score: %d] vs [AI Score: %d]"), pGS->PlayerPaddleRef->paddleScore, pGS->AIPaddleRef->paddleScore);
+	FString HUDString = FString::Printf(TEXT("Player Score: %d   vs   AI Score: %d"), pGS->PlayerPaddleRef->paddleScore, pGS->AIPaddleRef->paddleScore);
 	const FVector2D viewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
-	DrawText(HUDString, FColor::White, viewportSize.Y * 0.5f, 50, HUDFont);
+	DrawRect(FLinearColor::Black, viewportSize.X * 0.5f -165.0f, 47.5f, 300.0f, 30.0f);	// Color Background 
+	DrawText(HUDString, FColor::White, viewportSize.X * 0.5f - 150.0f, 50.0f, HUDFont);	// Text Foreground
 }
