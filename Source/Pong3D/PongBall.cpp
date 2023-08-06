@@ -20,9 +20,9 @@ APongBall::APongBall()
 	pBallMesh->OnComponentHit.AddDynamic(this, &APongBall::OnHit);
 
 	// Lock the mesh from rotating
-	pBallMesh->GetBodyInstance()->bLockXRotation = true;
-	pBallMesh->GetBodyInstance()->bLockYRotation = true;
-	pBallMesh->GetBodyInstance()->bLockZRotation = true;
+	//pBallMesh->GetBodyInstance()->bLockXRotation = true;
+	//pBallMesh->GetBodyInstance()->bLockYRotation = true;
+	//pBallMesh->GetBodyInstance()->bLockZRotation = true;
 
 	// Create and setup the audio component of the ball
 	AudioComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Sound Emitter"));
@@ -51,10 +51,10 @@ void APongBall::Tick(float DeltaTime)
 void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
-		if (!AudioComp->IsPlaying())
-			AudioComp->Play();
-
 		ChangeColor();
+
+		if (AudioComp)
+			AudioComp->Play();
 
 		if (OtherActor->ActorHasTag("Paddle")) {
 			AddSpeed();
@@ -63,12 +63,13 @@ void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 	}
 }
 
-// Reset the Pong Ball and add force to begin gameplay
+// Set the Pong Ball to the Center of the game area and add force randomly towards either player
 void APongBall::StartFaceOff()
 {
 	SetAtStartLocation();
 	FVector spawnDirection = GenerateRandDirection();
 	pBallMesh->AddImpulse(spawnDirection * pBallSpeed, NAME_None, true);
+	MoveTowardsPlayer();
 }
 
 // Reset the Pong Ball to middle of game area
@@ -88,21 +89,31 @@ FVector APongBall::GenerateRandDirection()
 	return spawnDirection;
 }
 
+// Randomly adds a full move value towards either player
+void APongBall::MoveTowardsPlayer()
+{
+	int RandPlayerStart = FMath::RandRange(0, 1);
+	if (RandPlayerStart == 0)
+		pBallMesh->AddImpulse(pBallMesh->GetRightVector() * pBallSpeed, NAME_None, true);
+	else
+		pBallMesh->AddImpulse(-pBallMesh->GetRightVector() * pBallSpeed, NAME_None, true);
+}
+
 // Check the movement speed on each axis and set it to the max speed if the ball goes over the max. Increased speed on the X for improved gameplay.
 void APongBall::LimitBallSpeed(FVector speed)
 {
 	if (speed.X <= ballMaxSpeed * 2.0f && speed.Y <= ballMaxSpeed && speed.Z <= ballMaxSpeed)
 		return;
 
-	if (speed.X > ballMaxSpeed * 2.0f) {
+	if (speed.X > ballMaxSpeed * 2.0f) 
 		speed.X = ballMaxSpeed * 2.0f;
-	}
-	if (speed.Y > ballMaxSpeed) {
+
+	if (speed.Y > ballMaxSpeed) 
 		speed.Y = ballMaxSpeed;
-	}
-	if (speed.Z > ballMaxSpeed) {
+
+	if (speed.Z > ballMaxSpeed) 
 		speed.Z = ballMaxSpeed;
-	}
+
 	pBallMesh->GetBodyInstance()->SetLinearVelocity(speed, false, true);
 }
 

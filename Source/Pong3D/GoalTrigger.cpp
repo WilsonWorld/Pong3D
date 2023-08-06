@@ -3,6 +3,7 @@
 
 #include "GoalTrigger.h"
 #include "PongGameState.h"
+#include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
 
 
@@ -20,12 +21,18 @@ AGoalTrigger::AGoalTrigger()
 	GoalBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	GoalBox->OnComponentBeginOverlap.AddDynamic(this, &AGoalTrigger::OnOverlap);
 
+	// Audtio Component
+	GoalAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Sound Emitter"));
+	GoalAudio->bAutoActivate = false;
+	GoalAudio->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+	GoalAudio->SetupAttachment(RootComponent);
 }
 
 void AGoalTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	PongGameState = Cast<APongGameState>(GetWorld()->GetGameState());
+	GoalAudio->SetSound(GoalSound);
 }
 
 //Check for objects overlaping this trigger, only ball can hit this. Check if it is set as the player or ai and update the score accordingly
@@ -36,6 +43,9 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 			PongGameState->PlayerPaddleRef->paddleScore++;
 		else
 			PongGameState->AIPaddleRef->paddleScore++;
+
+		if (GoalAudio)
+			GoalAudio->Play();
 
 		APongBall* pBall = Cast<APongBall>(OtherActor);
 		if (pBall != NULL)

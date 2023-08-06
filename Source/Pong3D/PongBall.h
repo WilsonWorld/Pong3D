@@ -46,6 +46,9 @@ protected:
 		FVector GenerateRandDirection();
 
 	UFUNCTION()
+		void MoveTowardsPlayer();
+
+	UFUNCTION()
 		void LimitBallSpeed(FVector speed);
 
 	UFUNCTION()

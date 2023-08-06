@@ -33,4 +33,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class APongGameState* PongGameState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
+		class UAudioComponent* GoalAudio;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+		class USoundBase* GoalSound;
 };
