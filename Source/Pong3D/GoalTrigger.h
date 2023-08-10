@@ -16,11 +16,11 @@ class PONG3D_API AGoalTrigger : public AActor
 public:	
 	AGoalTrigger();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, Category = "Game")
 		void ResetBall(class APongBall* ball);
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		class UBoxComponent* GoalBox;
+		UStaticMeshComponent* GoalMesh;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		bool bIsPlayerGoal;
@@ -31,8 +31,14 @@ protected:
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION(BlueprintCallable, Category = "Score")
+		void IncreaseScore();
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class APongGameState* PongGameState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		UMaterialInterface* OriginalMat;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
 		class UAudioComponent* GoalAudio;

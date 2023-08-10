@@ -11,15 +11,15 @@ AGoalTrigger::AGoalTrigger()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Create and set up the box trigger to detect overlaps
-	GoalBox = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger Box"));
-	SetRootComponent(GoalBox);
-	GoalBox->SetSimulatePhysics(true);
-	GoalBox->SetEnableGravity(false);
-	GoalBox->SetNotifyRigidBodyCollision(true);
-	GoalBox->SetCollisionProfileName("OverlapAllDynamic");
-	GoalBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	GoalBox->OnComponentBeginOverlap.AddDynamic(this, &AGoalTrigger::OnOverlap);
+	// Create the Mesh
+	GoalMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Trigger Box"));
+	SetRootComponent(GoalMesh);
+	GoalMesh->SetSimulatePhysics(true);
+	GoalMesh->SetEnableGravity(false);
+	GoalMesh->SetNotifyRigidBodyCollision(true);
+	GoalMesh->SetCollisionProfileName("OverlapAllDynamic");
+	GoalMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	GoalMesh->OnComponentBeginOverlap.AddDynamic(this, &AGoalTrigger::OnOverlap);
 
 	// Audtio Component
 	GoalAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Sound Emitter"));
@@ -32,6 +32,7 @@ void AGoalTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	PongGameState = Cast<APongGameState>(GetWorld()->GetGameState());
+	OriginalMat = GoalMesh->GetMaterial(0);
 	GoalAudio->SetSound(GoalSound);
 }
 
@@ -42,14 +43,17 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 		if (GoalAudio)
 			GoalAudio->Play();
 
-		if (bIsPlayerGoal == true)
-			PongGameState->PlayerPaddleRef->paddleScore++;
-		else
-			PongGameState->AIPaddleRef->paddleScore++;
+		IncreaseScore();
+		PongGameState->PongBallRef->ResetBall();
+		
+		if (bIsPlayerGoal)
+			return;
 
-		APongBall* pBall = Cast<APongBall>(OtherActor);
-		if (pBall != NULL)
-			ResetBall(pBall);
+		UMaterialInstanceDynamic* newMat = UMaterialInstanceDynamic::Create(OriginalMat, this);
+		FHitResult hit = SweepResult;
+		newMat->SetVectorParameterValue("Pos", hit.ImpactPoint); /* IMPACT RETURNING 0,0,0 - NEEDS FIX*/
+		newMat->SetScalarParameterValue("Radius", 50.0f);
+		GoalMesh->SetMaterial(0, newMat);
 	}
 }
 
@@ -57,4 +61,15 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 void AGoalTrigger::ResetBall(APongBall* ball)
 {
 	ball->ResetBall();
+}
+
+// Check which trigger went off through the bool; increase the score of opposing player and increase ai difficulty if scored on the non-player goal
+void AGoalTrigger::IncreaseScore()
+{
+	if (bIsPlayerGoal == false) {
+		PongGameState->PlayerPaddleRef->paddleScore++;
+		PongGameState->AIPaddleRef->IncreaseDifficulty();
+	}
+	else
+		PongGameState->AIPaddleRef->paddleScore++;
 }

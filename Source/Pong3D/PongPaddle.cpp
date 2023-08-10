@@ -67,19 +67,19 @@ void APongPaddle::CheckMoveBoundaries()
 {
 	// Move the Paddle along the Z-axis until they hit the boundaries
 	FVector NewLocationZ = GetActorLocation();
-	if (NewLocationZ.Z <= 600.0f)
-		NewLocationZ.Z = 600.0f;
-	if (NewLocationZ.Z >= 2100.0f)
-		NewLocationZ.Z = 2100.0f;
+	if (NewLocationZ.Z <= 625.0f)
+		NewLocationZ.Z = 625.0f;
+	if (NewLocationZ.Z >= 7075.0f)
+		NewLocationZ.Z = 7075.0f;
 
 	SetActorLocation(NewLocationZ);
 
 	// Move the Paddle along the Y-axis until they hit the boundaries
 	FVector NewLocationY = GetActorLocation();
-	if (NewLocationY.Y >= 1900.0f)
-		NewLocationY.Y = 1900.0f;
-	if (NewLocationY.Y <= -1900.0f)
-		NewLocationY.Y = -1900.0f;
+	if (NewLocationY.Y >= 4200.0f)
+		NewLocationY.Y = 4200.0f;
+	if (NewLocationY.Y <= -4200.0f)
+		NewLocationY.Y = -4200.0f;
 
 	SetActorLocation(NewLocationY);
 }

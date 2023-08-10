@@ -10,6 +10,7 @@ void AAIPongPaddle::BeginPlay()
 {
 	Super::BeginPlay();
 	TargetPosition = GetActorLocation();
+	ResetDifficulty();
 	GetPongBall();
 }
 
@@ -67,4 +68,15 @@ void AAIPongPaddle::ManagePaddleSleep(float DeltaTime)
 			SleepTime = 0.0f;
 		}
 	}
+}
+
+// Increase the response difficulty by 20%; increases the speed of which the paddle arrives at it's target position
+void AAIPongPaddle::IncreaseDifficulty()
+{
+	Difficulty *= 1.2f;
+}
+
+void AAIPongPaddle::ResetDifficulty()
+{
+	Difficulty = StartingDifficulty;
 }

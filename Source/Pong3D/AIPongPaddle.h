@@ -30,16 +30,25 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MovementAI")
 		void ManagePaddleSleep(float DeltaTime);
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float AwakeDuration = 10.0f;
+	UFUNCTION(BlueprintCallable, Category = "MovementAI")
+		void IncreaseDifficulty();
+
+	UFUNCTION(BlueprintCallable, Category = "MovementAI")
+		void ResetDifficulty();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float SleepDuration = 1.0f;
+		float AwakeDuration = 5.0f;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float Difficulty = 10.0f;
+		float SleepDuration = 0.75f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float StartingDifficulty = 1000.0f;
 
 private:
+	UPROPERTY()
+		float Difficulty;
+
 	FVector TargetPosition;
 	float AwakeTime = 0.0f;
 	float SleepTime = 0.0f;

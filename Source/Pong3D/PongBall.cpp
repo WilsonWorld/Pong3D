@@ -42,17 +42,16 @@ void APongBall::Tick(float DeltaTime)
 	LimitBallSpeed(velocity);
 }
 
-// Check if the ball has hit a paddle, and if so, add a burst of speed to it.
+// Check if the ball has hit anything to play bounce sound on the audio component; if colliding with paddle, change color and size while adding a burst of speed
 void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
-		ChangeColor();
-
 		if (AudioComp)
 			AudioComp->Play();
 
 		if (OtherActor->ActorHasTag("Paddle")) {
 			AddSpeed();
+			ChangeColor();
 			ChangeSize();
 		}
 	}
@@ -81,7 +80,7 @@ void APongBall::StartFaceOff()
 // Reset the Pong Ball to middle of game area
 void APongBall::SetAtStartLocation()
 {
-	FVector startLocation = FVector(0.0f, 0.0f, 1350.0f);
+	FVector startLocation = FVector(0.0f, 0.0f, 3850.0f);
 	SetActorLocation(startLocation);
 }
 
