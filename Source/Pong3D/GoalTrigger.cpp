@@ -11,10 +11,10 @@ AGoalTrigger::AGoalTrigger()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Create the Mesh
+	// Mesh Component
 	GoalMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Trigger Box"));
 	SetRootComponent(GoalMesh);
-	GoalMesh->SetSimulatePhysics(true);
+	GoalMesh->SetSimulatePhysics(false);
 	GoalMesh->SetEnableGravity(false);
 	GoalMesh->SetNotifyRigidBodyCollision(true);
 	GoalMesh->SetCollisionProfileName("OverlapAllDynamic");
@@ -23,9 +23,9 @@ AGoalTrigger::AGoalTrigger()
 
 	// Audtio Component
 	GoalAudio = CreateDefaultSubobject<UAudioComponent>(TEXT("Sound Emitter"));
+	GoalAudio->SetupAttachment(RootComponent);
 	GoalAudio->bAutoActivate = false;
 	GoalAudio->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	GoalAudio->SetupAttachment(RootComponent);
 }
 
 void AGoalTrigger::BeginPlay()
@@ -48,19 +48,9 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 		
 		if (bIsPlayerGoal)
 			return;
-
-		UMaterialInstanceDynamic* newMat = UMaterialInstanceDynamic::Create(OriginalMat, this);
-		FHitResult hit = SweepResult;
-		newMat->SetVectorParameterValue("Pos", hit.ImpactPoint); /* IMPACT RETURNING 0,0,0 - NEEDS FIX*/
-		newMat->SetScalarParameterValue("Radius", 50.0f);
-		GoalMesh->SetMaterial(0, newMat);
+		
+		ChangeColorMat();
 	}
-}
-
-// Resets the ball 
-void AGoalTrigger::ResetBall(APongBall* ball)
-{
-	ball->ResetBall();
 }
 
 // Check which trigger went off through the bool; increase the score of opposing player and increase ai difficulty if scored on the non-player goal
@@ -72,4 +62,21 @@ void AGoalTrigger::IncreaseScore()
 	}
 	else
 		PongGameState->AIPaddleRef->paddleScore++;
+}
+
+// Create a copy of the original material, changing it's color to red  to use for 0.5 seconds before resetting to original mat.
+void AGoalTrigger::ChangeColorMat()
+{
+	UMaterialInstanceDynamic* newMat = UMaterialInstanceDynamic::Create(OriginalMat, this);
+	FVector scoreColor = FVector(255.0f, 0.0f, 0.0f);
+	newMat->SetVectorParameterValue("MatColor", scoreColor);
+	GoalMesh->SetMaterial(0, newMat);
+	GetWorld()->GetTimerManager().SetTimer(ResetTimerHandle, this, &AGoalTrigger::ResetColorMat, 0.5f, false);
+}
+
+// Changes the mesh back to the original material and resets the Reset Timer Handle
+void AGoalTrigger::ResetColorMat()
+{
+	GoalMesh->SetMaterial(0, OriginalMat);
+	GetWorld()->GetTimerManager().ClearTimer(ResetTimerHandle);
 }

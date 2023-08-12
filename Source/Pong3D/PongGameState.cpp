@@ -6,6 +6,8 @@
 
 APongGameState::APongGameState()
 {
+	PrimaryActorTick.bCanEverTick = true;
+
 	AActor* paddleAiActor = UGameplayStatics::GetActorOfClass(GetWorld(), AAIPongPaddle::StaticClass());
 	AIPaddleRef = Cast<AAIPongPaddle>(paddleAiActor);
 
@@ -18,4 +20,11 @@ void APongGameState::BeginPlay()
 	Super::BeginPlay();
 	AActor* paddleActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerPongPaddle::StaticClass());
 	PlayerPaddleRef = Cast<APlayerPongPaddle>(paddleActor);
+}
+
+void APongGameState::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	GameTime += DeltaTime;
 }

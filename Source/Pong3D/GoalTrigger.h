@@ -16,9 +16,6 @@ class PONG3D_API AGoalTrigger : public AActor
 public:	
 	AGoalTrigger();
 
-	UFUNCTION(BlueprintCallable, Category = "Game")
-		void ResetBall(class APongBall* ball);
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UStaticMeshComponent* GoalMesh;
 
@@ -34,6 +31,12 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Score")
 		void IncreaseScore();
 
+	UFUNCTION()
+		void ChangeColorMat();
+
+	UFUNCTION()
+		void ResetColorMat();
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class APongGameState* PongGameState;
 
@@ -45,4 +48,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		class USoundBase* GoalSound;
+
+	UPROPERTY(BlueprintReadOnly)
+		FTimerHandle ResetTimerHandle;
 };

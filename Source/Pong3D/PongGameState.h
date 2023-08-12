@@ -22,6 +22,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		APlayerPongPaddle* PlayerPaddleRef;
 
@@ -30,5 +32,8 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		APongBall* PongBallRef;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float GameTime;
 	
 };
