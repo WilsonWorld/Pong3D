@@ -16,6 +16,8 @@ class PONG3D_API APong3DHUD : public AHUD
 public:
 	APong3DHUD();
 
+	virtual void BeginPlay() override;
+
 	virtual void DrawHUD() override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
@@ -23,4 +25,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class UImage* HUDBackgroundImage;
+
+	UPROPERTY()
+		class APongGameState* PongGameStateRef;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FVector2D CurrentViewportSize;
+
+private:
+	void DrawTextBackground();
+	void DrawHudText();
+	void DrawGameClock();
 };

@@ -35,6 +35,12 @@ public:
 		float paddleSpeed = 10;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float paddleSpeedMin = 25.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float paddleSpeedMax = 50.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		int paddleScore = 0;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

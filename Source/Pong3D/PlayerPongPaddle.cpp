@@ -23,6 +23,7 @@ APlayerPongPaddle::APlayerPongPaddle()
 void APlayerPongPaddle::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UpdateSpeed(DeltaTime);
 	UpdateLocation(CurrentMovementVert, CurrentMovementHoriz);
 	CheckMoveBoundaries();
 }
@@ -49,4 +50,24 @@ void APlayerPongPaddle::UpdateLocation(float vertMove, float horizMove)
 		NewLocationY = GetActorLocation() + (GetActorRightVector() * horizMove * paddleSpeed);
 
 	SetActorLocation(NewLocationY);
+}
+
+void APlayerPongPaddle::UpdateSpeed(float deltaTime)
+{
+	if (CurrentMovementVert == 0 && CurrentMovementHoriz == 0) {
+		if (paddleSpeed <= paddleSpeedMin) {
+			paddleSpeed = paddleSpeedMin;
+			return;
+		}
+
+		paddleSpeed -= 2.5f * deltaTime;
+	}
+	else {
+		if (paddleSpeed >= paddleSpeedMax) {
+			paddleSpeed = paddleSpeedMax;
+			return;
+		}
+
+		paddleSpeed += 2.5f * deltaTime;
+	}
 }

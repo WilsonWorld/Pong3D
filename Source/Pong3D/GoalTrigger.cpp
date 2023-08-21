@@ -44,6 +44,7 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 			GoalAudio->Play();
 
 		IncreaseScore();
+		PongGameState->PongBallRef->PlayGoalFX();
 		PongGameState->PongBallRef->ResetBall();
 		
 		if (bIsPlayerGoal)

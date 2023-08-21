@@ -11,20 +11,47 @@ APong3DHUD::APong3DHUD()
 {
 }
 
+void APong3DHUD::BeginPlay()
+{
+	Super::BeginPlay();
+	PongGameStateRef = Cast<APongGameState>(GetWorld()->GetGameState());
+	CurrentViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
+}
+
 void APong3DHUD::DrawHUD()
 {
 	Super::DrawHUD();
-	APongGameState* pGS = Cast<APongGameState>(GetWorld()->GetGameState());
-	const FVector2D viewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
-	FString HUDStringPlayerScore = FString::Printf(TEXT("Player Score: %d"), pGS->PlayerPaddleRef->paddleScore);
-	FString HUDStringComputerScore = FString::Printf(TEXT("Opponent Score: %d"), pGS->AIPaddleRef->paddleScore);
-	FString HUDStringGameTime = FString::Printf(TEXT("%.2f"), pGS->GameTime);
+	DrawTextBackground();
+	DrawHudText();
+	DrawGameClock();
+}
 
-	DrawRect(FLinearColor::Black, viewportSize.X * 0.25f, 47.5f, 130.0f, 30.0f);	// Color Background 
-	DrawRect(FLinearColor::Black, viewportSize.X * 0.75f, 47.5f, 160.0f, 30.0f);	// Color Background 
-	DrawRect(FLinearColor::Black, viewportSize.X * 0.50f - 25.0f, 47.5f, 100.0f, 30.0f);	// Color Background 
+void APong3DHUD::DrawTextBackground()
+{
+	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.20f - 70.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 140.0f, 30.0f);	// Player Score
+	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.80f - 85.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 170.0f, 30.0f);	// Computer Score
+	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.50f - 55.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 107.5f, 30.0f);	// Clock
+}
 
-	DrawText(HUDStringPlayerScore, FColor::White, viewportSize.X * 0.25f, 50.0f, HUDFont);	// Text Foreground
-	DrawText(HUDStringComputerScore, FColor::White, viewportSize.X * 0.75f, 50.0f, HUDFont);	// Text Foreground
-	DrawText(HUDStringGameTime, FColor::White, viewportSize.X * 0.50f, 50.0f, HUDFont);	// Text Foreground
+void APong3DHUD::DrawHudText()
+{
+	FString HUDStringPlayerScore = FString::Printf(TEXT("Player Score: %d"), PongGameStateRef->PlayerPaddleRef->paddleScore);
+	FString HUDStringComputerScore = FString::Printf(TEXT("Opponent Score: %d"), PongGameStateRef->AIPaddleRef->paddleScore);
+
+	DrawText(HUDStringPlayerScore, FColor::White, CurrentViewportSize.X * 0.20f - 65.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
+	DrawText(HUDStringComputerScore, FColor::White, CurrentViewportSize.X * 0.80f - 80.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
+}
+
+void APong3DHUD::DrawGameClock()
+{
+	// Seconds to HH : MM : SS Conversion
+	float hours = PongGameStateRef->GameTime / 3600.0f;
+	int roundedHours = (int)hours;
+	float minutes = (hours - roundedHours) * 60.0f;
+	int roundedMinutes = (int)minutes;
+	float seconds = (minutes - roundedMinutes) * 60.0f;
+	int roundedSeconds = (int)seconds;
+
+	FString HUDStringGameTime = FString::Printf(TEXT("%.2d : %.2d : %.2d"), roundedHours, roundedMinutes, roundedSeconds);
+	DrawText(HUDStringGameTime, FColor::White, CurrentViewportSize.X * 0.50f - 50.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
 }

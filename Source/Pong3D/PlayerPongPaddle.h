@@ -29,4 +29,7 @@ public:
 protected:
 	UFUNCTION()
 		void UpdateLocation(float vertMove, float horizMove);
+
+	UFUNCTION()
+		void UpdateSpeed(float deltaTime);
 };

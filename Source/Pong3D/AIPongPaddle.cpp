@@ -44,7 +44,7 @@ void AAIPongPaddle::SetPaddleTargetPosition()
 // Move the Paddle actor to the Target Position
 void AAIPongPaddle::MovePaddle(float DeltaTime)
 {
-	FVector NewPosition = FMath::VInterpConstantTo(GetActorLocation(), TargetPosition, DeltaTime, Difficulty);
+	FVector NewPosition = FMath::VInterpConstantTo(GetActorLocation(), TargetPosition, DeltaTime, Difficulty * paddleSpeedMax);
 	SetActorLocation(NewPosition);
 	CheckMoveBoundaries();
 }

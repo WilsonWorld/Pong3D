@@ -3,6 +3,7 @@
 
 #include "PongBall.h"
 #include "Components/AudioComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 APongBall::APongBall()
@@ -75,6 +76,12 @@ void APongBall::StartFaceOff()
 	SetAtStartLocation();
 	SetStartVelocity();
 	MoveTowardsPlayer();
+}
+
+void APongBall::PlayGoalFX()
+{
+	if (GoalExplosionPFX)
+		UGameplayStatics::SpawnEmitterAtLocation(this, GoalExplosionPFX, GetActorLocation());
 }
 
 // Reset the Pong Ball to middle of game area
