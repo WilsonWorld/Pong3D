@@ -72,8 +72,14 @@ protected:
 	UFUNCTION()
 		void ChangeColor();
 
+	UFUNCTION()
+		void PlayBounceFX(FVector location);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		UMaterialInterface* OriginalMat;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		UMaterialInstance* MatInstance;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Sound")
 		class UAudioComponent* AudioComp;
@@ -82,9 +88,10 @@ protected:
 		class USoundBase* BounceSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
-		UNiagaraSystem* GoalExplosionPFX;
+		class UNiagaraSystem* GoalExplosionPFX;
 
-		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		class UNiagaraSystem* BouncePFX;
 
 	UPROPERTY(BlueprintReadOnly)
 		FTimerHandle ResetTimerHandle;

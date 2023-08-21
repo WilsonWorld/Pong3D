@@ -3,7 +3,8 @@
 
 #include "PongBall.h"
 #include "Components/AudioComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 
 APongBall::APongBall()
@@ -47,8 +48,7 @@ void APongBall::Tick(float DeltaTime)
 void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
-		if (AudioComp)
-			AudioComp->Play();
+		PlayBounceFX(Hit.ImpactPoint);
 
 		if (OtherActor->ActorHasTag("Paddle")) {
 			AddSpeed();
@@ -81,7 +81,7 @@ void APongBall::StartFaceOff()
 void APongBall::PlayGoalFX()
 {
 	if (GoalExplosionPFX)
-		UGameplayStatics::SpawnEmitterAtLocation(this, GoalExplosionPFX, GetActorLocation());
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GoalExplosionPFX, GetActorLocation());
 }
 
 // Reset the Pong Ball to middle of game area
@@ -174,5 +174,18 @@ void APongBall::ChangeColor()
 	float randB = FMath::RandRange(0.0f, 1.0f);
 	FVector4 randColor = FVector4(randR, randG, randB, 1.0f);
 	newMat->SetVectorParameterValue("MatColor", randColor);
+	MatInstance = newMat;
 	pBallMesh->SetMaterial(0, newMat);
+}
+
+// Play the SFX and PFX for the bounce if they have been set in the Blueprint
+void APongBall::PlayBounceFX(FVector location)
+{
+	if (AudioComp)
+		AudioComp->Play();
+
+	if (BouncePFX)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BouncePFX, location);
+	}
 }
