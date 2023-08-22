@@ -52,6 +52,7 @@ void APlayerPongPaddle::UpdateLocation(float vertMove, float horizMove)
 	SetActorLocation(NewLocationY);
 }
 
+// Increases the speed of the paddle to the max if the paddle is moving and decreases the speed if it's not moving
 void APlayerPongPaddle::UpdateSpeed(float deltaTime)
 {
 	if (CurrentMovementVert == 0 && CurrentMovementHoriz == 0) {
@@ -60,7 +61,7 @@ void APlayerPongPaddle::UpdateSpeed(float deltaTime)
 			return;
 		}
 
-		paddleSpeed -= 2.5f * deltaTime;
+		paddleSpeed -= 3.0f * deltaTime;
 	}
 	else {
 		if (paddleSpeed >= paddleSpeedMax) {
@@ -68,6 +69,6 @@ void APlayerPongPaddle::UpdateSpeed(float deltaTime)
 			return;
 		}
 
-		paddleSpeed += 2.5f * deltaTime;
+		paddleSpeed += deltaTime;
 	}
 }

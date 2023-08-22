@@ -11,7 +11,6 @@ void AAIPongPaddle::BeginPlay()
 	Super::BeginPlay();
 	TargetPosition = GetActorLocation();
 	ResetDifficulty();
-	GetPongBall();
 }
 
 void AAIPongPaddle::Tick(float DeltaTime)
@@ -26,16 +25,10 @@ void AAIPongPaddle::Tick(float DeltaTime)
 	MovePaddle(DeltaTime);
 }
 
-// Grab the Pong Ball Actor and store it in the Pong Ball member variable
-APongBall* AAIPongPaddle::GetPongBall()
-{
-	return PongGameState->PongBallRef;
-}
-
 // Get the Paddle's current location and update it with the Pong Ball's Y & Z position, storing it inside the FVector member varible
 void AAIPongPaddle::SetPaddleTargetPosition()
 {
-	FVector ballPos = GetPongBall()->GetActorLocation();
+	FVector ballPos = PongGameState->PongBallRef->GetActorLocation();
 	FVector TargetLocation = GetActorLocation();
 	TargetLocation = FVector(TargetLocation.X, ballPos.Y, ballPos.Z);
 	TargetPosition = TargetLocation;

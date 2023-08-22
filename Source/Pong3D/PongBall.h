@@ -22,9 +22,6 @@ public:
 	UFUNCTION()
 		void ResetBall();
 
-	UFUNCTION()
-		void PlayGoalFX();
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UStaticMeshComponent* pBallMesh;
 
@@ -86,9 +83,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		class USoundBase* BounceSound;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
-		class UNiagaraSystem* GoalExplosionPFX;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
 		class UNiagaraSystem* BouncePFX;

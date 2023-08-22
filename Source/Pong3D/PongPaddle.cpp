@@ -3,7 +3,6 @@
 
 #include "PongPaddle.h"
 #include "PongGameState.h"
-#include "ReplayMenuWidget.h"
 
 
 APongPaddle::APongPaddle() 
@@ -34,20 +33,6 @@ void APongPaddle::BeginPlay()
 {
 	Super::BeginPlay();
 	PongGameState = Cast<APongGameState>(GetWorld()->GetGameState());
-}
-
-void APongPaddle::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	if (paddleScore < scoreLimit)
-		return;
-	else {
-		if (bTimerActive)
-			return;
-
-		bTimerActive = true;
-		GetWorld()->GetTimerManager().SetTimer(OpenMenuTimerHandle, this, &APongPaddle::OpenReplayMenu, 2.0f, false);
-	}
 }
 
 // Move the paddle up and down
@@ -82,17 +67,4 @@ void APongPaddle::CheckMoveBoundaries()
 		NewLocationY.Y = -4200.0f;
 
 	SetActorLocation(NewLocationY);
-}
-
-void APongPaddle::OpenReplayMenu()
-{
-	if (ReplayWidget) {
-		rmWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
-		rmWidget->AddToViewport(0);
-
-		if (bIsPlayerPaddle)
-			rmWidget->DisplayVictoryText();
-		else
-			rmWidget->DisplayDefeatText();
-	}
 }

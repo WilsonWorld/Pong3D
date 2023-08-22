@@ -2,8 +2,10 @@
 // Pong Game State class is responsible for managing the game objects.
 
 #include "PongGameState.h"
+#include "ReplayMenuWidget.h"
 
 
+// Set the AI paddle and Pong Ball refererences
 APongGameState::APongGameState()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -15,6 +17,7 @@ APongGameState::APongGameState()
 	PongBallRef = Cast<APongBall>(ballActor);
 }
 
+// Sets the player paddle reference at the start of the game when the player is generated.
 void APongGameState::BeginPlay()
 {
 	Super::BeginPlay();
@@ -22,9 +25,49 @@ void APongGameState::BeginPlay()
 	PlayerPaddleRef = Cast<APlayerPongPaddle>(paddleActor);
 }
 
+// Increase game timer by each frame
 void APongGameState::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 	GameTime += DeltaTime;
+}
+
+void APongGameState::OpenReplayMenu()
+{
+	if (ReplayWidget) {
+		ReplayMenuWidget = CreateWidget<UReplayMenuWidget>(GetWorld()->GetGameInstance(), ReplayWidget);
+		ReplayMenuWidget->AddToViewport(0);
+
+		if (PlayerScore > ComputerScore)
+			ReplayMenuWidget->DisplayVictoryText();
+		else
+			ReplayMenuWidget->DisplayDefeatText();
+	}
+}
+
+// Increment Player's score 
+void APongGameState::IncreasePlayerScore()
+{
+	PlayerScore++;
+	PongBallRef->ResetBall();
+
+	if (PlayerScore >= scoreLimit)
+		GetWorld()->GetTimerManager().SetTimer(OpenMenuTimerHandle, this, &APongGameState::OpenReplayMenu, 2.0f, false);
+}
+
+// Increment Computer's score 
+void APongGameState::IncreaseComputerScore()
+{
+	ComputerScore++;
+	PongBallRef->ResetBall();
+
+	if (ComputerScore >= scoreLimit)
+		GetWorld()->GetTimerManager().SetTimer(OpenMenuTimerHandle, this, &APongGameState::OpenReplayMenu, 2.0f, false);
+}
+
+// Reset both scores to 0
+void APongGameState::ResetScores()
+{
+	PlayerScore = 0;
+	ComputerScore = 0;
 }

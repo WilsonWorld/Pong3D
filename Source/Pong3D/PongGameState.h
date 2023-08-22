@@ -24,6 +24,15 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	void IncreasePlayerScore();
+
+	UFUNCTION()
+	void IncreaseComputerScore();
+
+	UFUNCTION()
+	void ResetScores();
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		APlayerPongPaddle* PlayerPaddleRef;
 
@@ -34,6 +43,28 @@ public:
 		APongBall* PongBallRef;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		float GameTime;
+		TSubclassOf<UUserWidget> ReplayWidget;
+
+	UPROPERTY()
+		class UReplayMenuWidget* ReplayMenuWidget;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float GameTime = 0.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int PlayerScore = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int ComputerScore = 0;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		int scoreLimit = 0;
 	
+private:
+	UFUNCTION()
+		void OpenReplayMenu();
+
+	UPROPERTY()
+		FTimerHandle OpenMenuTimerHandle;
+
 };

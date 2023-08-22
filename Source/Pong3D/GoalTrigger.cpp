@@ -5,6 +5,8 @@
 #include "PongGameState.h"
 #include "Components/AudioComponent.h"
 #include "Components/BoxComponent.h"
+#include "NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
 
 
 AGoalTrigger::AGoalTrigger()
@@ -40,12 +42,8 @@ void AGoalTrigger::BeginPlay()
 void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL)) {
-		if (GoalAudio)
-			GoalAudio->Play();
-
+		PlayGoalFX();
 		IncreaseScore();
-		PongGameState->PongBallRef->PlayGoalFX();
-		PongGameState->PongBallRef->ResetBall();
 		
 		if (bIsPlayerGoal)
 			return;
@@ -54,15 +52,25 @@ void AGoalTrigger::OnOverlap(UPrimitiveComponent* OverlapComp, AActor* OtherActo
 	}
 }
 
+// If the components are set, play the effects for a goal
+void AGoalTrigger::PlayGoalFX()
+{
+	if (GoalAudio)
+		GoalAudio->Play();
+
+	if (GoalExplosionPFX)
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GoalExplosionPFX, PongGameState->PongBallRef->GetActorLocation());
+}
+
 // Check which trigger went off through the bool; increase the score of opposing player and increase ai difficulty if scored on the non-player goal
 void AGoalTrigger::IncreaseScore()
 {
 	if (bIsPlayerGoal == false) {
-		PongGameState->PlayerPaddleRef->paddleScore++;
+		PongGameState->IncreasePlayerScore();
 		PongGameState->AIPaddleRef->IncreaseDifficulty();
 	}
 	else
-		PongGameState->AIPaddleRef->paddleScore++;
+		PongGameState->IncreaseComputerScore();;
 }
 
 // Create a copy of the original material, changing it's color to red  to use for 0.5 seconds before resetting to original mat.

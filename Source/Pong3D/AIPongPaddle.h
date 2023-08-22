@@ -19,16 +19,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "MovementAI")
-		class APongBall* GetPongBall();
-
-	UFUNCTION(BlueprintCallable, Category = "MovementAI")
 		void SetPaddleTargetPosition();
 
 	UFUNCTION(BlueprintCallable, Category = "MovementAI")
 		void MovePaddle(float DeltaTime);
-
-	UFUNCTION(BlueprintCallable, Category = "MovementAI")
-		void ManagePaddleSleep(float DeltaTime);
 
 	UFUNCTION(BlueprintCallable, Category = "MovementAI")
 		void IncreaseDifficulty();
@@ -46,6 +40,9 @@ public:
 		float StartingDifficulty = 1000.0f;
 
 private:
+	UFUNCTION(BlueprintCallable, Category = "MovementAI")
+	void ManagePaddleSleep(float DeltaTime);
+
 	UPROPERTY()
 		float Difficulty;
 

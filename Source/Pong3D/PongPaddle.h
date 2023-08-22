@@ -28,8 +28,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UStaticMeshComponent* paddleMesh;
 
+protected:
+	virtual void BeginPlay() override;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		TSubclassOf<UUserWidget> ReplayWidget;
+		class APongGameState* PongGameState;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float paddleSpeed = 10;
@@ -40,34 +43,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float paddleSpeedMax = 50.0f;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		int paddleScore = 0;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		int scoreLimit = 0;
-
-protected:
-	virtual void BeginPlay() override;
-
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION()
-		void OpenReplayMenu();
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		FTimerHandle OpenMenuTimerHandle;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		class APongGameState* PongGameState;
-
-	UPROPERTY()
-		class UReplayMenuWidget* rmWidget;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		bool bIsPlayerPaddle;
-
 	float CurrentMovementVert;
 	float CurrentMovementHoriz;
-	bool bTimerActive = false;
 
 };

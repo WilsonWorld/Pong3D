@@ -16,11 +16,11 @@ class PONG3D_API AGoalTrigger : public AActor
 public:	
 	AGoalTrigger();
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		UStaticMeshComponent* GoalMesh;
+	UFUNCTION()
+	void PlayGoalFX();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		bool bIsPlayerGoal;
+		UStaticMeshComponent* GoalMesh;
 
 protected:
 	virtual void BeginPlay() override;
@@ -49,6 +49,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
 		class USoundBase* GoalSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Visual")
+		class UNiagaraSystem* GoalExplosionPFX;
+
 	UPROPERTY(BlueprintReadOnly)
 		FTimerHandle ResetTimerHandle;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool bIsPlayerGoal;
 };

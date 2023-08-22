@@ -35,8 +35,8 @@ void APong3DHUD::DrawTextBackground()
 
 void APong3DHUD::DrawHudText()
 {
-	FString HUDStringPlayerScore = FString::Printf(TEXT("Player Score: %d"), PongGameStateRef->PlayerPaddleRef->paddleScore);
-	FString HUDStringComputerScore = FString::Printf(TEXT("Opponent Score: %d"), PongGameStateRef->AIPaddleRef->paddleScore);
+	FString HUDStringPlayerScore = FString::Printf(TEXT("Player Score: %d"), PongGameStateRef->PlayerScore);
+	FString HUDStringComputerScore = FString::Printf(TEXT("Opponent Score: %d"), PongGameStateRef->ComputerScore);
 
 	DrawText(HUDStringPlayerScore, FColor::White, CurrentViewportSize.X * 0.20f - 65.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
 	DrawText(HUDStringComputerScore, FColor::White, CurrentViewportSize.X * 0.80f - 80.0f, CurrentViewportSize.Y * 0.05f, HUDFont);

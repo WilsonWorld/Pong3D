@@ -61,10 +61,10 @@ void APongBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimiti
 // Public method for resetting the Pong Ball back to the start after the timer elasped
 void APongBall::ResetBall()
 {
+	pBallMesh->SetVisibility(false);
 	StopMovement();
 	SetAtStartLocation();
 	ResetSize();
-	pBallMesh->SetVisibility(false);
 	GetWorld()->GetTimerManager().SetTimer(ResetTimerHandle, this, &APongBall::StartFaceOff, 3.0f, false);
 }
 
@@ -76,12 +76,6 @@ void APongBall::StartFaceOff()
 	SetAtStartLocation();
 	SetStartVelocity();
 	MoveTowardsPlayer();
-}
-
-void APongBall::PlayGoalFX()
-{
-	if (GoalExplosionPFX)
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), GoalExplosionPFX, GetActorLocation());
 }
 
 // Reset the Pong Ball to middle of game area
@@ -185,7 +179,5 @@ void APongBall::PlayBounceFX(FVector location)
 		AudioComp->Play();
 
 	if (BouncePFX)
-	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BouncePFX, location);
-	}
 }

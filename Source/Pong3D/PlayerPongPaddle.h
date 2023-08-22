@@ -16,12 +16,6 @@ class PONG3D_API APlayerPongPaddle : public APongPaddle
 public:
 	APlayerPongPaddle();
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		class USpringArmComponent* springArm;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		class UCameraComponent* paddleCamera;
-
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -32,4 +26,10 @@ protected:
 
 	UFUNCTION()
 		void UpdateSpeed(float deltaTime);
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class USpringArmComponent* springArm;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		class UCameraComponent* paddleCamera;
 };
