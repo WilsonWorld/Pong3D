@@ -26,6 +26,7 @@ void APlayerPongPaddle::Tick(float DeltaTime)
 	UpdateSpeed(DeltaTime);
 	UpdateLocation(CurrentMovementVert, CurrentMovementHoriz);
 	CheckMoveBoundaries();
+	UpdateRotation(CameraInput.Y, CameraInput.X);
 }
 
 // Called to bind movement functionality to input
@@ -34,6 +35,8 @@ void APlayerPongPaddle::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("VertMove", this, &APongPaddle::VerticalMove);
 	PlayerInputComponent->BindAxis("HorizMove", this, &APongPaddle::HorizontalMove);
+	PlayerInputComponent->BindAxis("CameraPitch", this, &APlayerPongPaddle::PitchCamera);
+	PlayerInputComponent->BindAxis("CameraYaw", this, &APlayerPongPaddle::YawCamera);
 }
 
 // Move the Paddle along the Z-axis / Y-axis until it hits the boundaries
@@ -61,7 +64,7 @@ void APlayerPongPaddle::UpdateSpeed(float deltaTime)
 			return;
 		}
 
-		paddleSpeed -= 3.0f * deltaTime;
+		paddleSpeed -= 0.5f * deltaTime;
 	}
 	else {
 		if (paddleSpeed >= paddleSpeedMax) {
@@ -69,6 +72,25 @@ void APlayerPongPaddle::UpdateSpeed(float deltaTime)
 			return;
 		}
 
-		paddleSpeed += deltaTime;
+		paddleSpeed += 3.0f * deltaTime;
 	}
+}
+
+// Update the rotation of the spring arm attached to the paddle
+void APlayerPongPaddle::UpdateRotation(float camY, float camX)
+{
+	FRotator NewRotation = springArm->GetComponentRotation();
+	NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + camY, -20.0f, 10.0f);
+	NewRotation.Yaw = FMath::Clamp(NewRotation.Yaw + camX, -30.0f, 30.0f);
+	springArm->SetWorldRotation(NewRotation);
+}
+
+void APlayerPongPaddle::PitchCamera(float axisValue)
+{
+	CameraInput.Y = axisValue;
+}
+
+void APlayerPongPaddle::YawCamera(float axisValue)
+{
+	CameraInput.X = axisValue;
 }

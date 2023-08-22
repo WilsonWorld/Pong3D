@@ -27,9 +27,21 @@ protected:
 	UFUNCTION()
 		void UpdateSpeed(float deltaTime);
 
+	UFUNCTION()
+		void UpdateRotation(float camY, float camX);
+
+	UFUNCTION()
+		void PitchCamera(float axisValue);
+
+	UFUNCTION()
+		void YawCamera(float axisValue);
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class USpringArmComponent* springArm;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		class UCameraComponent* paddleCamera;
+
+	UPROPERTY()
+		FVector2D CameraInput;
 };
