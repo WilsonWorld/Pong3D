@@ -16,6 +16,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* ReplayButton;
 
+		UPROPERTY(meta = (BindWidget))
+		class UButton* QuitButton;
+
 	UPROPERTY()
 		class UTextBlock* VictoryText;
 
@@ -36,8 +39,13 @@ protected:
 
 	void ResetLevel();
 
+	void QuitToMainMenu();
+
 	UFUNCTION()
 		void OnReplayButtonClicked();
+
+	UFUNCTION()
+		void OnQuitButtonClicked();
 
 	UPROPERTY()
 		class APongController* PongControllerRef;

@@ -75,7 +75,6 @@ void APongBall::StartFaceOff()
 	GetWorld()->GetTimerManager().ClearTimer(ResetTimerHandle);
 	SetAtStartLocation();
 	SetStartVelocity();
-	MoveTowardsPlayer();
 }
 
 // Reset the Pong Ball to middle of game area
@@ -92,24 +91,27 @@ void APongBall::SetStartVelocity()
 	pBallMesh->AddImpulse(spawnDirection * pBallSpeed, NAME_None, true);
 }
 
-// Return a vector with a random direction within a -1 to 1 range
+// Return a vector with a random direction within a -1 to 1 range for the Y-axis and Z-axis
 FVector APongBall::GenerateRandDirection()
 {
-	float spawnDirectionX = FMath::RandRange(-1.0f, 1.0f);
+	float spawnDirectionX = MoveTowardsPlayer();
 	float spawnDirectionY = FMath::RandRange(-1.0f, 1.0f);
 	float spawnDirectionZ = FMath::RandRange(-1.0f, 1.0f);
 	FVector spawnDirection = FVector(spawnDirectionX, spawnDirectionY, spawnDirectionZ);
 	return spawnDirection;
 }
 
-// Randomly adds a full move value towards either player
-void APongBall::MoveTowardsPlayer()
+// Randomly picks a player to move towards on the X-axis
+float APongBall::MoveTowardsPlayer()
 {
 	int RandPlayerStart = FMath::RandRange(0, 1);
+	float RandPlayerDirX = 0.0f;
 	if (RandPlayerStart == 0)
-		pBallMesh->AddImpulse(pBallMesh->GetRightVector() * pBallSpeed, NAME_None, true);
+		RandPlayerDirX = -1.0f;
 	else
-		pBallMesh->AddImpulse(-pBallMesh->GetRightVector() * pBallSpeed, NAME_None, true);
+		RandPlayerDirX = 1.0f;
+
+	return RandPlayerDirX;
 }
 
 // Check the movement speed on each axis and set it to the max speed if the ball goes over the max. Increased speed on the X for improved gameplay.

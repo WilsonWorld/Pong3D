@@ -49,7 +49,7 @@ protected:
 		FVector GenerateRandDirection();
 
 	UFUNCTION()
-		void MoveTowardsPlayer();
+		float MoveTowardsPlayer();
 
 	UFUNCTION()
 		void LimitBallSpeed(FVector speed);
