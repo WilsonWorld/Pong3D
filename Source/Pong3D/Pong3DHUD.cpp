@@ -28,9 +28,9 @@ void APong3DHUD::DrawHUD()
 
 void APong3DHUD::DrawTextBackground()
 {
-	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.20f - 70.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 140.0f, 30.0f);	// Player Score
-	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.80f - 85.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 170.0f, 30.0f);	// Computer Score
-	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.50f - 55.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 107.5f, 30.0f);	// Clock
+	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.15f - 102.5f, CurrentViewportSize.Y * 0.05f - 2.5f, 205.0f, 30.0f);	// Player Score
+	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.85f - 115.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 230.0f, 30.0f);	// Computer Score
+	DrawRect(FLinearColor::Black, CurrentViewportSize.X * 0.50f - 55.0f, CurrentViewportSize.Y * 0.05f - 2.5f, 115.0f, 30.0f);	// Clock
 }
 
 void APong3DHUD::DrawHudText()
@@ -38,8 +38,8 @@ void APong3DHUD::DrawHudText()
 	FString HUDStringPlayerScore = FString::Printf(TEXT("Player Score: %d"), PongGameStateRef->PlayerScore);
 	FString HUDStringComputerScore = FString::Printf(TEXT("Opponent Score: %d"), PongGameStateRef->ComputerScore);
 
-	DrawText(HUDStringPlayerScore, FColor::White, CurrentViewportSize.X * 0.20f - 65.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
-	DrawText(HUDStringComputerScore, FColor::White, CurrentViewportSize.X * 0.80f - 80.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
+	DrawText(HUDStringPlayerScore, FColor::White, CurrentViewportSize.X * 0.15f - 97.5f, CurrentViewportSize.Y * 0.05f, HUDFont);
+	DrawText(HUDStringComputerScore, FColor::White, CurrentViewportSize.X * 0.85f - 110.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
 }
 
 void APong3DHUD::DrawGameClock()
@@ -52,6 +52,6 @@ void APong3DHUD::DrawGameClock()
 	float seconds = (minutes - roundedMinutes) * 60.0f;
 	int roundedSeconds = (int)seconds;
 
-	FString HUDStringGameTime = FString::Printf(TEXT("%.2d : %.2d : %.2d"), roundedHours, roundedMinutes, roundedSeconds);
+	FString HUDStringGameTime = FString::Printf(TEXT("%.2d:%.2d:%.2d"), roundedHours, roundedMinutes, roundedSeconds);
 	DrawText(HUDStringGameTime, FColor::White, CurrentViewportSize.X * 0.50f - 50.0f, CurrentViewportSize.Y * 0.05f, HUDFont);
 }
