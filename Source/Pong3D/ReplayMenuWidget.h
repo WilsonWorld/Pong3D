@@ -16,6 +16,9 @@ public:
 	UPROPERTY(meta = (BindWidget))
 		class UButton* ReplayButton;
 
+	UPROPERTY(meta = (BindWidget))
+		class UButton* MainMenuButton;
+
 		UPROPERTY(meta = (BindWidget))
 		class UButton* QuitButton;
 
@@ -41,8 +44,13 @@ protected:
 
 	void QuitToMainMenu();
 
+	void QuitGame();
+
 	UFUNCTION()
 		void OnReplayButtonClicked();
+
+	UFUNCTION()
+		void OnMainMenuButtonClicked();
 
 	UFUNCTION()
 		void OnQuitButtonClicked();

@@ -2,6 +2,7 @@
 // Pong Game State class is responsible for managing the game objects.
 
 #include "PongGameState.h"
+#include "PongController.h"
 #include "ReplayMenuWidget.h"
 #include "GameFramework/GameUserSettings.h"
 
@@ -25,8 +26,14 @@ void APongGameState::BeginPlay()
 	AActor* paddleActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerPongPaddle::StaticClass());
 	PlayerPaddleRef = Cast<APlayerPongPaddle>(paddleActor);
 
-	GEngine->GameUserSettings->SetFullscreenMode(EWindowMode::Windowed);
+	APlayerController* playController = GetWorld()->GetFirstPlayerController();
+	APongController* pongController = Cast<APongController>(playController);
 
+	if (pongController) {
+		pongController->bShowMouseCursor = false;
+		pongController->bEnableClickEvents = false;
+		pongController->bEnableMouseOverEvents = false;
+	}
 }
 
 // Increase game timer by each frame

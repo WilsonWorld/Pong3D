@@ -11,6 +11,7 @@ void UReplayMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 	ReplayButton->OnClicked.AddUniqueDynamic(this, &UReplayMenuWidget::OnReplayButtonClicked);
+	MainMenuButton->OnClicked.AddUniqueDynamic(this, &UReplayMenuWidget::OnMainMenuButtonClicked);
 	QuitButton->OnClicked.AddUniqueDynamic(this, &UReplayMenuWidget::OnQuitButtonClicked);
 
 	APlayerController* playController = GetWorld()->GetFirstPlayerController();
@@ -25,12 +26,17 @@ void UReplayMenuWidget::NativeConstruct()
 
 void UReplayMenuWidget::ResetLevel()
 {
-	UGameplayStatics::OpenLevel(GetWorld(), GetWorld()->GetLevel(0)->GetFName());
+	UGameplayStatics::OpenLevel(GetWorld(), "PongLevel");
 }
 
 void UReplayMenuWidget::QuitToMainMenu()
 {
 	UGameplayStatics::OpenLevel(GetWorld(), "MainMenuLevel");
+}
+
+void UReplayMenuWidget::QuitGame()
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), PongControllerRef, EQuitPreference::Quit, true);
 }
 
 void UReplayMenuWidget::OnReplayButtonClicked()
@@ -39,9 +45,15 @@ void UReplayMenuWidget::OnReplayButtonClicked()
 	ResetLevel();
 }
 
+void UReplayMenuWidget::OnMainMenuButtonClicked()
+{
+	EnableMouseEvents(true);
+	QuitToMainMenu();
+}
+
 void UReplayMenuWidget::OnQuitButtonClicked()
 {
-	QuitToMainMenu();
+	QuitGame();
 }
 
 void UReplayMenuWidget::EnableMouseEvents(bool state)

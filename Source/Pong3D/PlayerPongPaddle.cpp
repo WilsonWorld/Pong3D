@@ -80,7 +80,7 @@ void APlayerPongPaddle::UpdateSpeed(float deltaTime)
 void APlayerPongPaddle::UpdateRotation(float camY, float camX)
 {
 	FRotator NewRotation = springArm->GetComponentRotation();
-	NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + camY, -20.0f, 10.0f);
+	NewRotation.Pitch = FMath::Clamp(NewRotation.Pitch + camY, -15.0f, 15.0f);
 	NewRotation.Yaw = FMath::Clamp(NewRotation.Yaw + camX, -30.0f, 30.0f);
 	springArm->SetWorldRotation(NewRotation);
 }
