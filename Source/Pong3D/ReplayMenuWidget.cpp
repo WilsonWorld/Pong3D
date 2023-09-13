@@ -1,4 +1,4 @@
-// Paddle class for Pong 3D, created by Aaron Wilson, Wilson World Games. July 20th, 2023.
+// Replay Menu Widget class for Pong 3D, created by Aaron Wilson, Wilson World Games. August 20th, 2023.
 
 #include "ReplayMenuWidget.h"
 #include "PongController.h"

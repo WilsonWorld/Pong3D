@@ -3,6 +3,7 @@
 
 #include "PongGameState.h"
 #include "ReplayMenuWidget.h"
+#include "GameFramework/GameUserSettings.h"
 
 
 // Set the AI paddle and Pong Ball refererences
@@ -23,6 +24,9 @@ void APongGameState::BeginPlay()
 	Super::BeginPlay();
 	AActor* paddleActor = UGameplayStatics::GetActorOfClass(GetWorld(), APlayerPongPaddle::StaticClass());
 	PlayerPaddleRef = Cast<APlayerPongPaddle>(paddleActor);
+
+	GEngine->GameUserSettings->SetFullscreenMode(EWindowMode::Windowed);
+
 }
 
 // Increase game timer by each frame
